@@ -5,7 +5,7 @@ import { ColorContext } from './context/colorcontext'
 import Onboard from './onboard/onboard'
 import JoinGame from './onboard/joingame'
 import ChessGame from './chess/ui/chessgame'
-import WalletCard from './WalletCard';
+
 /*
  *  Frontend flow: 
  * 
@@ -50,7 +50,7 @@ function App() {
   return (
     
     <ColorContext.Provider value = {{didRedirect: didRedirect, playerDidRedirect: playerDidRedirect, playerDidNotRedirect: playerDidNotRedirect}}>
-      <div className='App'><WalletCard/></div>
+     
       <Router>
         <Switch>
           <Route path = "/" exact>
