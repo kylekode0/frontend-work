@@ -35,7 +35,7 @@ const JoinGame = (props) => {
     JoinGameRoom(gameid, props.userName, props.isCreator)
     return <div>
         <h1 style = {{textAlign: "center"}}>Welcome to Chess with Friend!</h1>
-        <h3 style = {{textAlign: "center"}}>Made with ❤️ by <a href = 'https://Unavailable/' target = '_blank'>Jack He</a>. Subscribe to my <a href = 'https://unavailable/' target = '_blank'>YouTube channel</a>. Follow me on <a href = 'https://unavailable' target = '_blank'>Instagram</a>.</h3>
+        <h3 style = {{textAlign: "center"}}>Text1<a href = 'https://Unavailable/' target = '_blank'>Text2</a>. Random Link <a href = 'https://unavailable/' target = '_blank'>Another Link here</a>. Another Link <a href = 'https://unavailable' target = '_blank'>Social Media :)</a>.</h3>
     </div>
 }
 
