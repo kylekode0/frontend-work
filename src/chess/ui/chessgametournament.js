@@ -13,7 +13,7 @@ import VideoChatApp from '../../connection/videochat'
 const socket  = require('../../connection/socket').socket
 
 
-class ChessGame extends React.Component {
+class ChessGameTournament extends React.Component {
 
     state = {
         gameState: new Game(this.props.color),
@@ -86,12 +86,12 @@ class ChessGame extends React.Component {
 
         // let the server and the other client know your move
         if (isMyMove) {
-            socket.emit('new move', {
+            socket.emit('new tournamentmove', {
                 nextPlayerColorToMove: !this.state.gameState.thisPlayersColorIsWhite,
                 playerColorThatJustMovedIsWhite: this.state.gameState.thisPlayersColorIsWhite,
                 selectedId: selectedId, 
                 finalPosition: finalPosition,
-                gameId: this.props.gameId
+                tournamentId: this.props.tournamentId
             })
         }
         
@@ -231,7 +231,7 @@ class ChessGame extends React.Component {
 
 
 
-const ChessGameWrapper = (props) => {
+const ChessGameTournamentWrapper = (props) => {
     /**
      * player 1
      *      - socketId 1
@@ -241,22 +241,29 @@ const ChessGameWrapper = (props) => {
      *      - socketId 1
      */
 
+    
 
 
-    // get the gameId from the URL here and pass it to the chessGame component as a prop. 
+
+    // get the tournamentid from the URL here and pass it to the chessGame component as a prop. 
     const domainName = 'http://localhost:3000' //Need to change this to you knw what
     const color = React.useContext(ColorContext)
-    const { gameid } = useParams()
+    const { tournamentid } = useParams()
     const [play] = useSound(chessMove);
     const [opponentSocketId, setOpponentSocketId] = React.useState('')
     const [opponentDidJoinTheGame, didJoinGame] = React.useState(false)
     const [opponentUserName, setUserName] = React.useState('')
     const [gameSessionDoesNotExist, doesntExist] = React.useState(false)
+
+    //.....................................................................
+   
+
+
     
 
     React.useEffect(() => {
-        socket.on("playerJoinedRoom", statusUpdate => {
-            console.log("A new player has joined the room! Username: " + statusUpdate.userName + ", Game id: " + statusUpdate.gameId + " Socket id: " + statusUpdate.mySocketId)
+        socket.on("playerJoinTournament", statusUpdate => {
+            console.log("A new player has joined the room! Username: " + statusUpdate.userName + ", Game id: " + statusUpdate.tournamentid + " Socket id: " + statusUpdate.mySocketId)
             if (socket.id !== statusUpdate.mySocketId) {
                 setOpponentSocketId(statusUpdate.mySocketId)
             }
@@ -274,7 +281,7 @@ const ChessGameWrapper = (props) => {
   
         
     
-        socket.on('start game', (opponentUserName) => {
+        socket.on('start tournament', (opponentUserName) => {
             console.log("START!")
             if (opponentUserName !== props.myUserName) {
                 setUserName(opponentUserName)
@@ -283,7 +290,7 @@ const ChessGameWrapper = (props) => {
                 // in chessGame, pass opponentUserName as a prop and label it as the enemy. 
                 // in chessGame, use reactContext to get your own userName
                 // socket.emit('myUserName')
-                socket.emit('request username', gameid)
+                socket.emit('request tournamentusername', tournamentid)
             }
         })
     
@@ -291,7 +298,7 @@ const ChessGameWrapper = (props) => {
         socket.on('give userName', (socketId) => {
             if (socket.id !== socketId) {
                 console.log("give userName stage: " + props.myUserName)
-                socket.emit('recieved userName', {userName: props.myUserName, gameId: gameid})
+                socket.emit('recieved tournamentuserName', {userName: props.myUserName, tournamentId: tournamentid})
             }
         })
     
@@ -303,29 +310,46 @@ const ChessGameWrapper = (props) => {
                 didJoinGame(true) 
             }
         })
+
+       
+        
+        
     }, [])
 
 
     return (
       <React.Fragment>
         {opponentDidJoinTheGame ? (
-          <div>
+          <div id = "parent">
             <h4> Opponent: {opponentUserName} </h4>
             <div style={{ display: "flex" }}>
-              <ChessGame
+              <ChessGameTournament
                 playAudio={play}
-                gameId={gameid}
+                tournamentId={tournamentid}
                 color={color.didRedirect}
               />
+
+              <ChessGameTournament
+                playAudio={play}
+                tournamentId={tournamentid}
+                color={color.didRedirect}
+              />
+              
               <VideoChatApp
                 mySocketId={socket.id}
                 opponentSocketId={opponentSocketId}
                 myUserName={props.myUserName}
                 opponentUserName={opponentUserName}
               />
+              
             </div>
             <h4> You: {props.myUserName} </h4>
+
           </div>
+
+          
+          
+          
         ) : gameSessionDoesNotExist ? (
           <div>
             <h1 style={{ textAlign: "center", marginTop: "200px" }}> :( </h1>
@@ -347,7 +371,7 @@ const ChessGameWrapper = (props) => {
                   console.log('sd')
                   event.target.select()
               }}
-              value = {domainName + "/game/" + gameid}
+              value = {domainName + "/tournament/" + tournamentid}
               type = "text">
               </textarea>
             <br></br>
@@ -362,4 +386,4 @@ const ChessGameWrapper = (props) => {
     );
 };
 
-export default ChessGameWrapper
+export default ChessGameTournamentWrapper

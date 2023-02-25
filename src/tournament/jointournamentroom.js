@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import JoinGame from "./joingame";
-import ChessGame from "../chess/ui/chessgame";
+import JoinTournament from "./jointournament";
+import ChessGameTournament from "../chess/ui/chessgametournament";
+
+
 
 const socket = require("../connection/socket").socket;
 
@@ -8,7 +10,7 @@ const socket = require("../connection/socket").socket;
  * Onboard is where we create the game room.
  */
 
-class JoinRoom extends React.Component {
+class JoinTournamentRoom extends React.Component {
   state = {
     didGetUserName: false,
     inputText: "",
@@ -35,8 +37,8 @@ class JoinRoom extends React.Component {
       <React.Fragment>
         {this.state.didGetUserName ? (
           <React.Fragment>
-            <JoinGame userName={this.state.inputText} isCreator={false} />
-            <ChessGame myUserName={this.state.inputText} />
+            <JoinTournament userName={this.state.inputText} isCreator={false}   />
+            <ChessGameTournament myUserName={this.state.inputText} />
           </React.Fragment>
         ) : (
           <div>
@@ -85,4 +87,4 @@ class JoinRoom extends React.Component {
   }
 }
 
-export default JoinRoom;
+export default JoinTournamentRoom;

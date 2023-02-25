@@ -13,6 +13,14 @@ socket.on("createNewGame", statusUpdate => {
     mySocketId = statusUpdate.mySocketId
 })
 
+
+socket.on("createNewTournamentGame", statusUpdate => {
+    console.log("A new tournament game has been created! Username: " + statusUpdate.userName + ", Game id: " + statusUpdate.tournamentId + " Socket id: " + statusUpdate.mySocketId)
+    mySocketId = statusUpdate.mySocketId
+})
+
+
+
 export {
     socket,
     mySocketId
